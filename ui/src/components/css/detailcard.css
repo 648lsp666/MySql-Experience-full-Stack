@@ -1,0 +1,78 @@
+.detailcard{
+    min-width: 400px;
+    margin: 5px 20px 5px 20px;
+    height: calc(100% - 10px);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgba(181, 181, 255, 0.164);
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00000029;
+    gap:30px;
+}
+.detailprofile{
+    align-self: flex-start;
+    position: relative;
+    width: 100%;
+    display: flex;
+}
+.detailprofile img{
+    width: 120px;
+    height: 150px;
+    margin-right: 10px;
+}
+.detailprofile span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: #000;
+    gap:8px;
+}
+.scroll{
+    padding: 10px;
+    flex-grow: 1;
+    overflow-y: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px 0 rgba(0, 0, 100, 0.311);
+
+}
+
+.gradeprofile{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+}
+.gradeprofile .scroll{
+    width: 100%;
+    margin-right: 20px;
+    box-shadow: none;
+}
+
+.scroll table thead tr th{
+    height: 40px;
+}
+.scroll table tbody tr td{
+    height: 20px;
+}
+.scroll table tbody tr td,
+.scroll table thead tr th{
+    border: 1px solid #bbb;
+}
+.scroll table thead tr th:nth-child(odd)
+{
+    background: #bbb;
+}
+.detailcard .formbtn{
+    background-color: #97f4ff94;
+}

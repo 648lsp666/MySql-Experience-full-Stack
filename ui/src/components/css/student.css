@@ -1,0 +1,129 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  position: relative;
+}
+
+.container h1 {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.card{
+    width: inherit;
+    height: 100%;
+    border-radius: 30px;
+    box-shadow: 0 0 20px 0 rgba(0,0,0,.5);
+    display: flex;
+    flex-direction: column;
+
+}
+.formbtn{
+    width: 70px;
+    height: 30px;
+    background-color: #eeeeee;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    border: 1px solid #eeeeee;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+.formbtn:hover{
+    cursor: pointer;
+    background-color: #eeeeeee1;
+    box-shadow: 1px 5px 5px 0 #00000033 ;
+}
+
+input.left{
+    position: absolute;
+    transform: translateX(100px);
+}
+.card-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+}
+.form-control{
+    max-width: 600px;
+    min-width: 180px;
+    height: 100%;
+    padding: 10px;
+    border-radius: 30px 0 0 30px;
+}
+.form-control:focus{
+    outline: none;
+    box-shadow: 0 0 20px 0 rgba(0,0,0,.5)
+}
+.btn{
+    height: 100%;
+    padding: 10px;
+    border-radius:  0  30px 30px 0;
+    background-color: rgb(108, 108, 108);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.search{
+    display: flex;
+    min-width: 260px;
+}
+.body-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+}
+.body-title h2{
+    font-size: 18px;
+    font-weight: 600;
+}
+.body-title a{
+    font-size: 12px;
+
+}
+.card-body{
+    display:flex;
+    justify-content: flex-start;
+    align-items:flex-start;
+    width: inherit;
+    height: 100%;
+    overflow:auto;
+}
+.studentinfo{
+    width: inherit;
+    height: 100%;
+}
+.card-body table{
+    width: 100%;
+    padding-left: 30px;
+    border-collapse: collapse;
+    transition: .3s ease-in-out;
+}
+.card-body table tbody tr td:nth-child(1):hover{
+    cursor: pointer;
+    background-color: #ccc;
+}
+.card-body table thead tr th,
+.card-body table tbody tr td{
+    text-align: center;
+    min-width: 80px;
+    border-bottom:1px solid #bbb;
+    height: 40px;
+}
+.card-body table thead tr th{
+    height: 80px;
+}
+.card-body table tbody tr:nth-child(even),
+.card-body table thead{
+    background: #eeeeee80;
+}

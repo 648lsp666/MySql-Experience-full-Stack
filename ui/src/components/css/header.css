@@ -1,0 +1,6 @@
+.app-title{
+    position: absolute;
+    align-self: flex-start;
+    padding-left: 20px;
+    font-size: 26px;
+}
