@@ -5,6 +5,8 @@ import PaginationComponent from '../pagination';
 import Coursecard from './coursecard';
 import SingleCourse from './singlecourse';
 import axios from 'axios';
+import { message,Button,Input } from 'antd';
+const { Search } = Input;
 
 function CoursesInfo(props) {
     const [courses, setCourses] = useState([]);
@@ -15,7 +17,8 @@ function CoursesInfo(props) {
             const response = await axios.get('http://localhost:3001/getcourseinfo');
             setCourses(response.data.courseinfo);
         } catch (error) {
-            alert(error);
+            message.error('获取课程信息失败!');
+            console.log(error);
         }
     };
 
@@ -76,16 +79,23 @@ function CoursesInfo(props) {
             
             <div className="card-header">
                 <h3 className="card-title">课程信息</h3>
-                <input
-                    className='formbtn left'
-                    type='button'
-                    value="+添加课程"
+                <Button
+                    style={{
+                        position: 'absolute',
+                        transform:"translateX(100px)"
+                    }}
+                    type='primary'
                     onClick={handleAddCourse}
-                />
+                >+添加课程</Button>
                 {/* 其他组件 */}
                 <form className='search'>
-                <input type="text" className="form-control" placeholder="根据选择内容搜索" />
-                <input type="submit" className="btn btn-primary" value="搜索" onClick={handleSearch}/>
+                    <Search
+                    placeholder="根据内容搜索"
+                    allowClear
+                    enterButton="搜索"
+                    size="middle"
+                    onSearch={handleSearch}
+                    />
                 </form>
             </div>
             <div className="card-body">

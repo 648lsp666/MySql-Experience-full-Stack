@@ -36,14 +36,15 @@
     justify-self: flex-start;
     align-self: flex-start;
 }
+
+.oneprofileedit{
+    margin: 12px 20px;
+}
 .oneprofileedit input{
     width: 100%;
     min-width: 300px;
-    height: 25px;
-    border-radius: 5px;
-    border: 1px solid rgba(0, 0, 255, 0.301);
+    height: 30px;
     padding: 5px;
-    margin-bottom: 10px;
 }
 .oneprofileedit input:focus{
     outline: none;
@@ -54,6 +55,7 @@
     width: 80px;
     color: #fff;
 }
+
 .readonly:hover{
     cursor: not-allowed;
 }
@@ -64,7 +66,6 @@
 .wrongmessage{
     color:red;
     position: absolute;
-    transform: translateX(10px)translateY(40px);
     left: 0;
     font-size: 12px;
 }

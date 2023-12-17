@@ -2,26 +2,35 @@ import React,{useState,useEffect, Fragment} from "react";
 import "./css/detailcard.css";
 import axios from "axios";
 import defaultsrc from "../images/defaultavatar.png";
+import { Button,Drawer } from "antd";
 
-function DetailCard({profile,gradedetail,showedit}) {
+function DetailCard({profile,gradedetail,showedit,open,ifopen}) {
     const {Sno,Sname,Sdept,grade}=profile;
-    console.log(gradedetail);
     const gradelist = gradedetail.map((item)=>{
-        return(
-            <Fragment key={item.Sno}>
-            <tr>
-                <td>{item.Cname}</td>
-                <td>{item.grade}</td>
-            </tr>
-            </Fragment>
-        )
+        if(item.Sno===Sno){
+            return(
+                <Fragment key={item.Cno}>
+                <tr>
+                    <td>{item.Cname}</td>
+                    <td>{item.grade}</td>
+                    <td>{item.Ccredit}</td>
+                </tr>
+                </Fragment>
+            )
+        }
     });
     function showform(){
         showedit(true);
     }
     
   return (
-    <div className="detailcard">
+    <Drawer open={open} 
+    onClose={()=>ifopen(false)}
+    getContainer={false}
+    style={{
+        position:"relative",
+    }}
+    title={Sno}>
        <div className="detailprofile">
        <img src={defaultsrc} alt="默认头像" />
        <div className="scroll">
@@ -41,25 +50,26 @@ function DetailCard({profile,gradedetail,showedit}) {
                     <tr>
                         <th>课程名</th>
                         <th>成绩</th>
+                        <th>学分</th>
                     </tr>
                     </thead>
                     <tbody>
                     {gradelist}
                     </tbody>
                 </table>
+               
             </div>
-            
-            <button className="formbtn"
+            <Button 
             style={{
                 width:"100%",
-                background:'#97f4ff94',
             }}
+            type="primary"
             onClick={showform}
-            >修改信息</button>
+            >修改信息</Button>
             
         </div>
        
-    </div>
+    </Drawer>
     )
 }
 

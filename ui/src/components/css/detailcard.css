@@ -35,7 +35,6 @@
     padding: 10px;
     flex-grow: 1;
     overflow-y: auto;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -51,7 +50,8 @@
     justify-content: center;
     align-items: flex-start;
     width: 100%;
-    height: 100%;
+    flex-grow: 1;
+    flex: 1;
 }
 .gradeprofile .scroll{
     width: 100%;
@@ -67,9 +67,9 @@
 }
 .scroll table tbody tr td,
 .scroll table thead tr th{
-    border: 1px solid #bbb;
+    border: 1px solid #ccc;
 }
-.scroll table thead tr th:nth-child(odd)
+.scroll table thead tr th
 {
     background: #bbb;
 }

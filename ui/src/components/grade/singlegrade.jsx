@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Button } from 'antd';
 
 function SingleGrade(props) {
   const { Sno,Sname,Sdept,grade} = props.props;
@@ -15,7 +16,7 @@ function SingleGrade(props) {
     <td>{Sdept}</td>
     <td>{avggrade}</td>
     <td>
-    <input type='button' className='formbtn' value="查看信息" onClick={(e)=>handleClick(e)}/>
+    <Button type="text" onClick={(e)=>handleClick(e)}>查看信息</Button>
     </td>
 </tr>
 )}

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { message,Button,Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+const {confirm } = Modal;
 
 function SingleCourse(props) {
   console.log(props);
@@ -13,24 +16,41 @@ function SingleCourse(props) {
     try{
       const response = await axios.post('http://localhost:3001/updatecourse',newCourse);
       console.log(response);
-      alert(response.data.status);
       setonEdit(false);
       props.fetchData();
+      message.success('修改成功!');
     }catch(err){
+      message.error('修改失败!');
       console.log(err);
     }
   }
+  const warning = () => {
+    confirm({
+      title: '警告！',
+      icon: <ExclamationCircleFilled />,
+      content: '确认删除课程吗？',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        deletedata();
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
   const deletedata = async ()=>{
     console.log(Cno);
-    if (window.confirm('确定要删除吗？')){  
     try{
       const response = await axios.post('http://localhost:3001/deletecourse',{Cno:Cno});
-      alert(response.data.status);
+  
       props.fetchData();
+      message.success('删除成功!');
     }catch(err){
+      message.error('删除失败!');
       console.log(err);
     }
-  }
   }
   return !onEdit?(
     <tr >
@@ -39,9 +59,13 @@ function SingleCourse(props) {
     <td>{props.props.Cpno}</td>
     <td>{props.props.Ccredit}</td>
     <td>
-        <input type='button' className='formbtn' value="编辑" onClick={()=>setonEdit(true)}/>
-        <input type='button' className='formbtn' value="删除" onClick={()=>deletedata()} style={{color:'red'}}/>
+    <Button type="default"size='small'style={{
+      margin: '0 5px'
+    }} onClick={()=>setonEdit(true)} >编辑</Button>
+    <Button type="default"size='small'style={{
+    }} onClick={warning} danger>删除</Button>
     </td>
+    
 </tr>
 ):(
   <tr >
@@ -50,8 +74,11 @@ function SingleCourse(props) {
     <td><input type='text' className='formedit' onChange={(e)=>setCpno(e.target.value)} value={Cpno} /></td>
     <td><input type='text' className='formedit' onChange={(e)=>setCcredit(e.target.value)} value={Ccredit} /></td>
     <td>
-        <input type='button' className='formbtn' value="取消" onClick={()=>setonEdit(false)} />
-        <input type='button' className='formbtn' value="保存" onClick={()=>postdata()} />
+        <Button size="small" type="default"
+        style={{
+            margin: '0 5px'
+        }} onClick={()=>setonEdit(false)}>取消</Button>
+        <Button size="small" type="default" onClick={()=>postdata()}>保存</Button>
     </td>
 </tr>
 )}

@@ -5,6 +5,8 @@ import SingleGrade from './singlegrade';
 import DetailCard from '../detailcard';
 import GradeCard from './gradecard';
 import axios from 'axios';
+import { Input,Button,message} from 'antd';
+const { Search } = Input;
 
 function GradesInfo(props) {
     const [Grades, setGrades] = useState([]);
@@ -19,7 +21,8 @@ function GradesInfo(props) {
         const response = await axios.get('http://localhost:3001/getgradeinfo');
         setGrades(response.data.gradeinfo);
         } catch (error) {
-            alert(error);
+            console.log(error);
+            message.error("连接服务器失败！");
         }
     };
     useState(()=>{
@@ -29,8 +32,10 @@ function GradesInfo(props) {
         try {
             const response = await axios.post('http://localhost:3001/getallgrade',{Sno:CurrentSno});
             setCurrentGrade(response.data.gradeinfo);
+            console.log(response.data.gradeinfo);
         } catch (error) {
-            alert(error);
+            console.log(error);
+            message.error("连接服务器失败！");
         }
     };
 
@@ -57,17 +62,24 @@ function GradesInfo(props) {
     function handlePageChange(pageNumber) {
         setCurrentPage(pageNumber);
     }
-    
+    function handleSearch(){
+
+    }
     return (
-        console.log(whethershowform),
         <div className="container">
-        {whethershowform && <GradeCard></GradeCard>}
+
+        <GradeCard open={whethershowform} close={()=>setwhethershowform(false)}></GradeCard>
         <div className="card-header">
             <h3 className="card-title">成绩信息</h3>
             <form className='search'>
-            <input type="text" className="form-control" placeholder="根据选择内容搜索" />
-            <input type="submit" className="btn btn-primary" value="搜索"/>
-            </form>
+                    <Search
+                    placeholder="根据内容搜索"
+                    allowClear
+                    enterButton="搜索"
+                    size="middle"
+                    onSearch={handleSearch}
+                    />
+                </form>
         </div>
         <div className="card-body">
             <div className="studentinfo">
@@ -85,12 +97,15 @@ function GradesInfo(props) {
                         {GradesList}
                     </tbody>
                 </table>
-            
+                <DetailCard 
+                    profile={Currentprofile} 
+                    gradedetail={CurrentGrade}
+                    open = {whethershowdetail}
+                    ifopen = {setwhethershowdetail}
+                    showedit={setwhethershowform}
+                    />
             </div>
-        {whethershowdetail === 1 && <DetailCard 
-        profile={Currentprofile} 
-        gradedetail={CurrentGrade}
-        showedit={setwhethershowform}/>}
+        
     </div>
     <PaginationComponent
             totalItems = {Gradeslength} 

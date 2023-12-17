@@ -1,20 +1,20 @@
-import { func } from 'prop-types';
 import React from'react';
 import "./css/barbutton.css"
+import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 
 export function BarButton({params}) {
-    function handleClick() {
-        window.location.href = params.path;
-    }
+
     return (
-        <div className="bar-button" onClick={handleClick}>
-            <div className="bar-button-button" >
+        <Link to={params.path}>
+        <div className="bar-button">
+            <div>
                 
-                <span className="bar-button-label">
+                <span >
                     {params.name}
                 </span>
             </div>
         </div>
+        </Link>
         )
 }
 

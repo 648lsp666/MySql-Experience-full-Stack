@@ -4,6 +4,8 @@ import PaginationComponent from './pagination';
 import axios from 'axios';
 import SingleStudent from './singlestudent';
 import StudentFormcard from './studentformcard';
+import { message,Button ,Input} from 'antd';
+const { Search } = Input;
 
 
 function StudentsInfo(props) {
@@ -13,7 +15,7 @@ function StudentsInfo(props) {
     const [currentStudent,setcurrentStudent] = useState(0);
 
     function handleaddClick(){
-        setcurrentStudent(0);
+        setcurrentStudent({});
         setwhethershowadd(1);
         setmode(1);
     }
@@ -38,7 +40,8 @@ function StudentsInfo(props) {
         const response = await axios.get('http://localhost:3001/getstudentinfo');
         setStudents(response.data.studentinfo);
         } catch (error) {
-            console.error('Error fetching data:', error.message, error.response)
+            message.error('获取学生信息失败!');
+            console.log(error);
         }
     };
     
@@ -74,10 +77,18 @@ function StudentsInfo(props) {
             {whethershowadd!=0 && <StudentFormcard mode={mode} oncancel={oncancel} data={currentStudent} onsubmit={handlePageChange}></StudentFormcard>}
             <div className="card-header">
                 <h3 className="card-title">学生信息</h3>
-                <input className='formbtn left' type='button' value="+添加学生" onClick={handleaddClick}/>
+                <Button type="primary" style={{
+                    position: 'absolute',
+                    transform: 'translateX(100px)',
+                }} onClick={handleaddClick}>+添加学生</Button>
                 <form className='search'>
-                <input type="text" className="form-control" placeholder="根据选择内容搜索" />
-                <input type="submit" className="btn btn-primary" value="搜索" onClick={handleSearch}/>
+                    <Search
+                    placeholder="根据内容搜索"
+                    allowClear
+                    enterButton="搜索"
+                    size="middle"
+                    onSearch={handleSearch}
+                    />
                 </form>
             </div>
             <div className="card-body">

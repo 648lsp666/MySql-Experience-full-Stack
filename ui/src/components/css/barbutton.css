@@ -19,8 +19,3 @@
     height: 40px;
     justify-content: center;
 }
-.bar-button-button:hover{
-    color: #1e1e1e;
-    cursor: pointer;
-    background-color: #eeeeee;
-}

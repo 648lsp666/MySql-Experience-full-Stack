@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../css/coursecard.css";
 import axios from "axios";
+import { message } from "antd";
 
 function Coursecard({setCourses,setNewCourse,setWhethershowadd}){
     const [Cno,setCno] = useState(null);    
@@ -17,12 +18,12 @@ function Coursecard({setCourses,setNewCourse,setWhethershowadd}){
         try{
             const response = await axios.post("http://localhost:3001/addcourse",newcourse);
             console.log(response);
-            alert(response.data.status);
             
+            message.success("添加成功!");
         }catch(error){
+            message.error("添加失败!");
             console.log(error);
         }
-        
         setCourses((prevCourses) => [...prevCourses,newcourse]);
         setNewCourse(null);
     }
