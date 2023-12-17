@@ -10,8 +10,10 @@ const courseQuery = {
     deleteCourse: 'DELETE FROM course WHERE Cno=?',
 }
 const gradeQuery = {
-    getAvgGrade: 'select student.Sno,Sname,Sdept,avg(sc.grade) as grade from student,sc where student.Sno=sc.Sno group by sc.Sno',
-    getGradeById: "select sc.Sno,course.Cname,sc.grade from course,sc where sc.Sno=? and course.Cno = sc.Cno",
+    getAvgGrade: 'select student.Sno,Sname,Sdept,sum(grade*Ccredit)/sum(Ccredit) as grade from student join sc on sc.Sno = student.Sno join course on sc.Cno = course.Cno group by student.Sno order by grade desc',
+    getGradeById: "select sc.Sno,course.Cname,sc.grade,course.Ccredit from course,sc where sc.Sno=? and course.Cno = sc.Cno order by course.Cno;",
+    getGradeprofilebyCno: "select student.*,sc.Grade from sc,student where sc.Cno = ? and sc.Sno=student.Sno order by sc.Grade",
+    getGradeprofilebySdept: "select student.Sno,Sname,Sdept,round(sum(grade*Ccredit)/sum(Ccredit),2) as Grade from student join sc on sc.Sno = student.Sno join course on sc.Cno = course.Cno where student.Sdept =? group by student.Sno order by Grade desc",
 }
 
 module.exports = {

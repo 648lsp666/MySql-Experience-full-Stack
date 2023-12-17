@@ -40,7 +40,8 @@ app.use('/deletecourse',require("./routes/course/deletecourse"));
 //app.use('/getcourselist',require("./routes/grade/getcourselist"));
 app.use('/getgradeinfo',require("./routes/grade/getgradeinfo"));
 app.use('/getallgrade',require("./routes/grade/getallgradeinfo"));
-
+app.use('/getallgradebycno',require("./routes/grade/getallgradebycno"));
+app.use('/getallgradebysdept',require("./routes/grade/getallgradebysdept"));
 
 // Æô¶¯·þÎñÆ÷
 app.listen(port, () => {

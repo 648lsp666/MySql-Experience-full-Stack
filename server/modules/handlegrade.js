@@ -58,8 +58,42 @@ const handleGrade = {
             })
             Connection.release();
         })
-    }
-
+    },
+    getAllGradeByCno:(param,res)=>{
+        console.log(param);
+        const Cno = param.Cno;
+        pool.getConnection((err,Connection)=>{
+            Connection.query(gradeQuery.getGradeprofilebyCno,[Cno],(err,result)=>{
+                if(err){
+                    const r = {status:"error",message:"获取成绩失败"};
+                    res.send(JSON.stringify(r));
+                }
+                else {
+                    const r = {status:"success",message:"获取成绩成功",gradeinfo:result};
+                    res.send(JSON.stringify(r));
+                }
+            })
+            Connection.release();
+        })
+    },
+    getAllGradeBySdept:(param,res)=>{
+        console.log(param);
+        const {Sdept} = param;
+        pool.getConnection((err,Connection)=>{
+            Connection.query(gradeQuery.getGradeprofilebySdept,[Sdept],(err,result)=>{
+                if(err){
+                    const r = {status:"error",message:"获取成绩失败",gradeinfo:result};
+                    res.send(JSON.stringify(r));
+                }
+                else {
+                    const r = {status:"success",message:"获取成绩成功",gradeinfo:result};
+                    res.send(JSON.stringify(r));
+                }
+              
+            })
+            Connection.release();
+        })
+    },
 }
 
 
