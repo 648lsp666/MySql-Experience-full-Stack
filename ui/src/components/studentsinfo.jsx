@@ -27,13 +27,26 @@ function StudentsInfo(props) {
     function oncancel(){
         setwhethershowadd(0);
     }
-    function handleSearch(){
-        //搜索学生
+    async function handleSearch(value){
+        console.log(value);
+        try{
+            const response = await axios.post("http://localhost:3001/getstudentinfobyid",{value:value});
+            console.log(response);
+            setStudents(response.data.studentinfo);
+            message.success("查询成功!");
+        }
+        catch(error){
+            if(error.request.status==400)
+            message.error("查询值为空！");
+            else    
+            message.error("查询失败！");
+            console.log(error);
+        }
     }
 
     useEffect(() => {
         fetchData();
-    }, [students]);
+    }, []);
 
     const fetchData = async () => {
         try {
@@ -43,7 +56,7 @@ function StudentsInfo(props) {
             message.error('获取学生信息失败!');
             console.log(error);
         }
-    };
+    }; 
     
     const itemsPerPage = 12;
     const studentlength = students.length;
@@ -54,7 +67,7 @@ function StudentsInfo(props) {
     // 截取当前页的数据
     const currentPageData = students.slice(startIndex, endIndex);      
     const studentsList = currentPageData.map((student) => (
-        <SingleStudent key={student.id} props={student} onEdit={[setcurrentStudent,handleeditclick]} />
+        <SingleStudent key={student.Sno} props={student} onEdit={[setcurrentStudent,handleeditclick]} />
     ));
 
     const handlePageChange = (page) => {
@@ -81,15 +94,15 @@ function StudentsInfo(props) {
                     position: 'absolute',
                     transform: 'translateX(100px)',
                 }} onClick={handleaddClick}>+添加学生</Button>
-                <form className='search'>
+                <div className='search'>
                     <Search
-                    placeholder="根据内容搜索"
+                    placeholder="根据学号搜索"
                     allowClear
                     enterButton="搜索"
                     size="middle"
                     onSearch={handleSearch}
                     />
-                </form>
+                </div>
             </div>
             <div className="card-body">
                 <div className="studentinfo">
