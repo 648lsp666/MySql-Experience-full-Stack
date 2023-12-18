@@ -4,8 +4,22 @@ import axios from "axios";
 import defaultsrc from "../images/defaultavatar.png";
 import { Button,Drawer } from "antd";
 
-function DetailCard({profile,gradedetail,showedit,open,ifopen}) {
+function DetailCard({profile,showedit,open,ifopen}) {
     const {Sno,Sname,Sdept,grade}=profile;
+    const [gradedetail,setgradedetail] = useState([]);
+    const getdetail = async () =>{
+        try {
+            const response = await axios.post('http://localhost:3001/getallgrade',{Sno:Sno});
+            console.log(response.data.gradeinfo);
+            setgradedetail(response.data.gradeinfo);
+        } catch (error) {
+            console.log(error);
+            message.error("连接服务器失败！");
+        }
+    };
+    useEffect(()=>{
+        getdetail();
+    },[Sno]);
     const gradelist = gradedetail.map((item)=>{
         if(item.Sno===Sno){
             return(
@@ -19,6 +33,18 @@ function DetailCard({profile,gradedetail,showedit,open,ifopen}) {
             )
         }
     });
+    
+
+    const totalCcredit = gradedetail.reduce((acc, item) => {
+        if (item.Sno === Sno) {
+          return acc + parseFloat(item.Ccredit);
+        }
+        return acc;
+      }, 0);
+      
+      // 然后你可以在 JSX 中使用 totalCcredit 变量
+      
+
     function showform(){
         showedit(true);
     }
@@ -37,6 +63,7 @@ function DetailCard({profile,gradedetail,showedit,open,ifopen}) {
             <span><h3>学号:</h3> <p>{Sno}</p></span>
             <span><h3>姓名:</h3> <p>{Sname}</p></span>
             <span><h3>系别:</h3> <p>{Sdept}</p></span>
+            <span><h3>总修学分:</h3> <p>{totalCcredit}</p></span>
             <span><h3>加权成绩:</h3> <p>{parseFloat(grade).toFixed(2)}</p></span>
        </div>
        </div>

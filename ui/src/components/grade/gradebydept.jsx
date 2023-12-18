@@ -31,15 +31,15 @@ function Gradebydept(){
   const [grade,setgrade] = useState([]);
   const [currentSegment,setcurrentSegment] = useState([]);
   const [ratios,setratios] = useState(null);
-
   const {Sdept} = useParams();
+  const [dept,setdept] = useState(Sdept);
+
+
   const Great = grade.filter(grade => parseFloat(grade.Grade) >= 90);
   const Good = grade.filter(grade => parseFloat(grade.Grade) >= 80 && parseFloat(grade.Grade) < 90);
   const Fair = grade.filter(grade => parseFloat(grade.Grade) >= 70 && parseFloat(grade.Grade) < 80);
   const Poor = grade.filter(grade => parseFloat(grade.Grade) >= 60 && parseFloat(grade.Grade) < 70);
   const Fail = grade.filter(grade => parseFloat(grade.Grade) < 60);
-
-  console.log(Good);
   const data = [
       { name: '>90', 人数: Great.length ,value:Great },
       { name: '80-89', 人数: Good.length ,value:Good },
@@ -51,68 +51,86 @@ function Gradebydept(){
   const fetchdata = async () => {
     if(Sdept){
       try{
-      const response = await axios.post("http://localhost:3001/getallgradebysdept",{Sdept:Sdept});
+      const response = await axios.post("http://localhost:3001/getallgradebysdept",{Sdept:dept});
       console.log(response.data);
       setgrade(response.data.gradeinfo);
-      setratios(
-        <div className="ratio">
-          <h3>优秀率：</h3>
-          <span>{Math.round(Great.length/grade.length*100).toFixed(2)}%</span>
-          <h3>加权最高分：</h3>
-          <span>{Math.max(...grade.map(grade => parseFloat(grade.Grade))).toFixed(2)}</span>
-          <h3>年级平均分：</h3>
-          <span>{Math.round(grade.map(grade => parseFloat(grade.Grade)).reduce((a,b)=>a+b)/grade.length).toFixed(2)}</span>
-          <h3>加权最低分：</h3>
-          <span>{Math.min(...grade.map(grade => parseFloat(grade.Grade))).toFixed(2)}</span>
-          <h3>年级中位数分：</h3>
-          <span>{((parseFloat(grade[Math.floor((grade.length-1)/2)].Grade)+parseFloat(grade[Math.ceil((grade.length-1)/2)].Grade))/2).toFixed(2)}</span>
-          <h3>不及格率：</h3>
-          <span>{Math.round(Fail.length/grade.length*100).toFixed(2)}%</span>
-        </div>
-        )
     }
     catch(err){
       console.log(err);
     }
     }
   };
-  useEffect(() => {
-    fetchdata();
-    
-  }, [Sdept]);
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-  const handleBarClick = (data) => {
-    setcurrentSegment(data.payload.value);
-
-  };
   //分页操作
   const itemsPerPage = 5;
-  const Gradeslength = currentSegment.length;
   const [currentPage, setCurrentPage] = useState(1);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentPageData = currentSegment.slice(startIndex, endIndex);    
+  //计算排名  
+
+  //处理点击柱状图柱子创建list
+  const [list,setlist] = useState([]);
+  const handleBarClick = (data) => {
+    setcurrentSegment(data.payload.value);  
     const calculateRank = () => {
-  const sortedGrades = grade.slice().sort((a, b) => parseFloat(b.Grade) - parseFloat(a.Grade));
-  const studentIndex = sortedGrades.findIndex(student => student.Sno === currentSegment[0].Sno);
-  const rank = studentIndex + 1;
-  return rank;
-};
-  const list = currentPageData.map((item, index) => {
-    return (
-      <tr key={item.Sno}>
-      <td>{item.Sno}</td>
-      <td>{item.Sname}</td>
-      <td>{item.Grade}</td>
-      <td>{calculateRank()+index}/{grade.length}</td>
-      <td>
-         <Button type="text" onClick={(e)=>(e)}>查看信息</Button>
-      </td>
-      </tr>
-    );
-  });
+      const sortedGrades = grade.slice().sort((a, b) => parseFloat(b.Grade) - parseFloat(a.Grade));
+      const studentIndex = sortedGrades.findIndex(student => student.Sno === data.payload.value[0].Sno);
+      const rank = studentIndex + 1;
+      return rank;
+    };
+    setlist(data.payload.value.slice(startIndex, endIndex).map((item, index) => {
+      return (
+        <tr key={item.Sno}>
+        <td>{item.Sno}</td>
+        <td>{item.Sname}</td>
+        <td>{item.Grade}</td>
+        <td>{item.Credit}</td>
+        <td>{calculateRank()+index}/{grade.length}</td>
+        <td>
+           <Button type="text" onClick={(e)=>showDrawerinfo({
+            Sno:item.Sno,Sname:item.Sname,Sdept:Sdept,grade:item.Grade,
+           })}>查看信息</Button>
+        </td>
+        </tr>
+      );
+    }));
+  };
+
+  //根据路由获取数据
+  
+  useEffect(() => {
+    fetchdata();
+    setlist([]);
+  }, [dept]);
+  //根据grade便获获取ratios数据
+
+  const options = [
+    {
+      value: 'CS',
+      label: '计算机',
+    },
+    {
+      value: 'MA',
+      label: '文学',
+    },
+    {
+      value: 'IS',
+      label: '信息安全',
+    },
+  ];
+  const [label,setlabel] = useState((options.map((item)=>{
+    if(item.value === Sdept){
+      return item.label;
+    }
+  })));
+  const handleChange = (value) => {
+    console.log(value);
+      setdept(value);
+      setlabel(options.map((item)=>{
+        if(item.value === value){
+          return item.label;
+        }
+      }));
+  };
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -120,23 +138,51 @@ function Gradebydept(){
   const [open, setOpen] = useState(false);
   const showDrawer = () => {
     setOpen(true);
+    setratios(
+      <div className="ratios">
+        <div className="ratio">
+          <h3>优秀率：</h3>
+          <span>{Math.round(Great.length/grade.length*100).toFixed(2)}%</span>
+        </div>
+        <div className="ratio">
+          <h3>加权最高分：</h3>
+          <span>{Math.max(...grade.map(grade => parseFloat(grade.Grade))).toFixed(2)}</span>
+          </div>
+        <div className="ratio">
+          <h3>年级平均分：</h3>
+          <span>{Math.round(grade.map(grade => parseFloat(grade.Grade)).reduce((a,b)=>a+b)/grade.length).toFixed(2)}</span>
+          </div>
+        <div className="ratio">
+          <h3>加权最低分：</h3>
+          <span>{Math.min(...grade.map(grade => parseFloat(grade.Grade))).toFixed(2)}</span>
+        </div>
+        <div className="ratio">
+          <h3>年级中位数分：</h3>
+          <span>{((parseFloat(grade[Math.floor((grade.length-1)/2)].Grade)+parseFloat(grade[Math.ceil((grade.length-1)/2)].Grade))/2).toFixed(2)}</span>
+          </div>
+        <div className="ratio">
+          <h3>不及格率：</h3>
+          <span>{Math.round(Fail.length/grade.length*100).toFixed(2)}%</span>
+          </div>
+      </div>
+      )
   };
   const onClose = () => {
     setOpen(false);
   };
   //学生信息栏,和gradeinfo一样,用drawer显示
   const [openinfo, setOpeninfo] = useState(false);
-  const showDrawerinfo = () => {
-    setOpeninfo(true);
-  };
-  const onCloseinfo = () => {
-    setOpeninfo(false);
+  const [currentProfile,setcurrentProfile] = useState({});
+  const showDrawerinfo = (param) => {
+    setcurrentProfile(param);
+    setOpeninfo(!openinfo);
   };
 
+  
     return (
       <div className="container">
       <div className="card-header">
-            <h3 className="card-title">计算机系成绩统计</h3>
+            <h3 className="card-title">{label}系成绩统计</h3>
             <Button 
             type="primary" 
             onClick={showDrawer}
@@ -147,25 +193,14 @@ function Gradebydept(){
               导出成绩
             </Button>
             <Select
-              defaultValue="CS"
+              defaultValue={Sdept}
               style={{
                 width: 120,
               }}
               onChange={handleChange}
-              options={[
-                {
-                  value: 'CS',
-                  label: '计算机系',
-                },
-                {
-                  value: 'lucy',
-                  label: 'Lucy',
-                },
-                {
-                  value: 'Yiminghe',
-                  label: 'yiminghe',
-                },
-              ]}
+              options={
+                options
+              }
             />
         </div>
       <div className='card-body' ref={parentRef}>
@@ -183,7 +218,8 @@ function Gradebydept(){
               ticks={[0, 10, 20, 30]}
             />
             <Tooltip />
-            <Bar dataKey="人数" fill="#8884d8" 
+            <Bar dataKey="人数" 
+            fill="#18ff09" 
             style={{
               cursor: 'pointer',
             }}
@@ -197,7 +233,7 @@ function Gradebydept(){
           </Drawer>
     </div>
     <div className="card-header">
-            <h3 className="card-title">分段成绩排名</h3>
+            <h3 className="card-title">{label}系分段成绩排名</h3>
             </div>
             <div className="card-body">
             <table>
@@ -206,6 +242,7 @@ function Gradebydept(){
                       <th>学号</th>
                       <th>姓名</th>
                       <th>加权成绩</th>
+                      <th>总学分</th>
                       <th>系排名</th>
                       <th>操作</th>
                   </tr>
@@ -213,11 +250,15 @@ function Gradebydept(){
               <tbody>
                 {list}
               </tbody>
-            <Drawer ></Drawer>
           </table>
+          <Detailcard 
+                    profile={currentProfile} 
+                    open = {openinfo}
+                    ifopen = {setOpeninfo}
+                    />
      </div>
      <PaginationComponent
-            totalItems = {Gradeslength} 
+            totalItems = {currentSegment.length} 
             itemsPerPage = {itemsPerPage} 
             onPageChange = {handlePageChange}/>
 </div>

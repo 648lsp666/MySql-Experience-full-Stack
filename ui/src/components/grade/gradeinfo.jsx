@@ -90,16 +90,19 @@ function GradesInfo(props) {
                             <th>姓名</th>
                             <th>系别</th>
                             <th>加权成绩</th>
+                            <></>
                             <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody
+                    style={{
+                        transition: 'all .3s ease-in-out',
+                    }}>
                         {GradesList}
                     </tbody>
                 </table>
                 <DetailCard 
                     profile={Currentprofile} 
-                    gradedetail={CurrentGrade}
                     open = {whethershowdetail}
                     ifopen = {setwhethershowdetail}
                     showedit={setwhethershowform}
