@@ -1,16 +1,16 @@
 const mysqlconfig = require("mysql2");
-// ÒýÈëmysqlÁ¬½ÓÅäÖÃ
+// å¼•å…¥mysqlè¿žæŽ¥é…ç½®
 const mysql = require ('../config/mysql');
-// ÒýÈëÁ¬½Ó³ØÅäÖÃ
+// å¼•å…¥è¿žæŽ¥æ± é…ç½®
 const poolExtend = require ('./poolExtend.js');
 
-//Ëæ»úÊýÉú³ÉÆ÷
+//éšæœºæ•°ç”Ÿæˆå™¨
 const studentQuery = require('./SqlRequests').studentQuery;
-// Ê¹ÓÃÁ¬½Ó³Ø£¬ÌáÉýÐÔÄÜ
+// ä½¿ç”¨è¿žæŽ¥æ± ï¼Œæå‡æ€§èƒ½
 const pool = mysqlconfig.createPool (poolExtend ({}, mysql));
 
 const handleStudent = {
-    // ×¢²á
+    // æ³¨å†Œ
     addnewStudent:(param,res) =>{
         const addinfoquery = 'INSERT INTO student values(?,?,?,?,?,?)';
         const Sno = param.Sno;
@@ -20,7 +20,7 @@ const handleStudent = {
         const Sdept = param.Sdept;
         const Scholarship = param.Scholarship;
         console.log(Sno);
-        //´¦ÀíÊäÈëÂß¼­
+        //å¤„ç†è¾“å…¥é€»è¾‘
         /**/
         pool.getConnection((err,Connection)=>{
             Connection.query(addinfoquery,[Sno,
@@ -102,6 +102,37 @@ const handleStudent = {
         Connection.release();
         })
     },
+    getStudentinfoById:(param,res)=>{
+        pool.getConnection((err,Connection)=>{
+            if(err){
+                res.send(JSON.stringify({code:"error"}));
+            }
+            console.log(param);
+            const ID = param.value;
+            if(ID==''){
+                res.status(400).send(JSON.stringify("No Empty String!"));
+            }
+            else{
+            Connection.query(studentQuery.getStudentById,[`%${ID}%`],(err,results)=>{
+                if(err){
+                    console.error('Error querying database:', err);
+                    res.status(500).send('Internal Server Error');
+                    res.status(404).send('Not Found');
+                }
+                else{
+                    const r = {
+                        code:"success",
+                        mysqlinfo: results,
+                        studentinfo: results,
+                    }
+                    res.status(200).send(JSON.stringify(r));
+                }
+            })
+            Connection.release();
+        }//else
+        })
+        
+    }
 }
 
 module.exports = handleStudent;

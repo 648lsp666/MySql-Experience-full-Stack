@@ -31,6 +31,7 @@ app.use('/getstudentinfo',require("./routes/student/getstudentinfo"));
 app.use('/addstudent',require("./routes/student/addstudent"));
 app.use('/updatestudent',require("./routes/student/updatestudent"));
 app.use('/deletestudent',require("./routes/student/deletestudent"));
+app.use('/getstudentinfobyid',require("./routes/student/getstudentinfobyid"));
 
 app.use('/getcourseinfo',require("./routes/course/getcourseinfo"));
 app.use('/addcourse',require("./routes/course/addcourse"));
